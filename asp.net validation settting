@@ -39,3 +39,61 @@ function NicerPage_ClientValidate(validationGroup){
         $(this).parent().addClass('invalidField');
     }
 }
+
+
+
+
+
+
+//otehr 
+
+<script>
+
+    $(function(){
+        if (typeof ValidatorUpdateDisplay != 'undefined') {
+            var originalValidatorUpdateDisplay = ValidatorUpdateDisplay;
+
+            ValidatorUpdateDisplay = function (val) {
+                if (!val.isvalid) {
+                    $("#" + val.controltovalidate).closest("div").addClass("form-error");
+                }
+
+                originalValidatorUpdateDisplay(val);
+            }
+        }
+    });
+
+</script>
+
+http://stackoverflow.com/questions/614445/howto-make-requiredfieldvalidator-change-the-css-class-of-the-parent-div
+
+
+<script type="text/javascript">
+    function ValidatorUpdateDisplay(val) {
+        if (typeof (val.display) == "string") {
+            if (val.display == "None") {
+                return;
+            }
+            if (val.display == "Dynamic") {
+                val.style.display = val.isvalid ? "none" : "inline";
+                return;
+            }
+        }
+        if ((navigator.userAgent.indexOf("Mac") > -1) && (navigator.userAgent.indexOf("MSIE") > -1)) {
+            val.style.display = "inline";
+        }
+        val.style.visibility = val.isvalid ? "hidden" : "visible";
+
+
+        //---  Add / Remove Error Class
+        var triggeredSiblings = 0;
+        if (val.isvalid) {
+            $(val).siblings('span').each(function () {
+                if ($(this).isvalid == false) { triggeredSiblings = 1; }
+            });
+            if (triggeredSiblings == 0) { $(val).closest("div").removeClass("error"); }
+        } else {
+            $(val).closest("div").addClass("error");
+        }
+    }
+</script>
