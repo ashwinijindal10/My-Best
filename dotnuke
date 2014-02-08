@@ -19,3 +19,15 @@
             view.Initialize += InitializeInternal;
             view.Load += LoadInternal;
         }
+        
+        
+        
+ public enum ModuleMessageType
+        {
+            GreenSuccess,
+            YellowWarning,
+            RedError,
+            BlueInfo
+        }
+
+
