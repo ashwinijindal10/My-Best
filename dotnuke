@@ -1,0 +1,21 @@
+  protected ModulePresenterBase(TView view) : base(view)
+        {
+            //Try and cast view to Control to get common control properties
+            var control = view as Control;
+            if (control != null && control.Page != null)
+            {
+                IsPostBack = control.Page.IsPostBack;
+            }
+
+            //Try and cast view to IModuleControl to get the Context
+            var moduleControl = view as IModuleControl;
+            if (moduleControl != null)
+            {
+                LocalResourceFile = moduleControl.LocalResourceFile;
+                ModuleContext = moduleControl.ModuleContext;
+            }
+            Validator = new Validator(new DataAnnotationsObjectValidator());
+
+            view.Initialize += InitializeInternal;
+            view.Load += LoadInternal;
+        }
