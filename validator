@@ -1,0 +1,120 @@
+
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="TestWeb.WebForm1" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="jquery-1.7.1.js" type="text/javascript"></script>
+    <script>
+
+        //        $(function () {
+        //            if (typeof ValidatorUpdateDisplay != 'undefined') {
+        //                var originalValidatorUpdateDisplay = ValidatorUpdateDisplay;
+
+        //                ValidatorUpdateDisplay = function (val) {
+        //                    console.log("l");
+        //                    if (!val.isvalid) {
+        //                                 document.getElementById(val.controltovalidate).style.backgroundColor = val.isvalid ? "" : '#FFAAAA';
+        //                    }
+
+        //                    originalValidatorUpdateDisplay(val);
+        //                }
+        //            }
+        //        });
+
+
+        //        function NewValidatorUpdateDisplay(val) {
+        //            OriginalValidatorUpdateDisplay(val);
+        //            if (val.controltovalidate) {
+        //                document.getElementById(val.controltovalidate).style.backgroundColor = val.isvalid ? "" : '#FFAAAA';
+        //            }
+
+
+        //            if (typeof (ValidatorUpdateDisplay) == 'function') {
+        //                OriginalValidatorUpdateDisplay = ValidatorUpdateDisplay;
+        //                ValidatorUpdateDisplay = NewValidatorUpdateDisplay;
+        //            }
+        //        }
+    </script>
+    <style>
+        .error
+        {
+            background-color :#FFAAAA ;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        name
+        <asp:TextBox ID="txt1" runat="server"></asp:TextBox>
+        <asp:RequiredFieldValidator ID="rf1" ValidationGroup="v1" ControlToValidate="txt1"
+            runat="server"  Display="Dynamic"  ErrorMessage="RequiredFieldValidator" />
+    </div>
+    <div>
+        username
+        <asp:TextBox ID="txt2" runat="server"></asp:TextBox>
+          <asp:CompareValidator ID="CompareValidator1" ValidationGroup="v1" runat="server"
+            Display="Dynamic" ControlToCompare="txt1" ControlToValidate="txt2" ErrorMessage="CompareValidator"></asp:CompareValidator>
+        <asp:RequiredFieldValidator ValidationGroup="v1" ID="RequiredFieldValidator2" runat="server"  Display="Dynamic" 
+            ErrorMessage="RequiredFieldValidator" ControlToValidate="txt2" />
+      
+    </div>
+    <asp:Button ID="Button1" ValidationGroup="v1" runat="server" Text="save" />
+    </form>
+    <script type="text/javascript">
+
+        function ValidatorUpdateDisplay(val) {
+            var errorClass = "error";
+            if (typeof (val.display) == "string") {
+                if (val.display == "None") {
+                    return;
+                }
+                if (val.display == "Dynamic") {
+                    var valid = IsControlValid(val.controltovalidate, val.validationGroup);
+                    if (!valid) {
+                        val.style.display = "inline";
+                        $('#' + val.controltovalidate).addClass(errorClass);
+                        return;
+                    } else {
+                        val.style.display = "none"
+                        $('#' + val.controltovalidate).removeClass(errorClass);
+                    }
+                }
+            }
+            if ((navigator.userAgent.indexOf("Mac") > -1) &&
+                     (navigator.userAgent.indexOf("MSIE") > -1)) {
+                val.style.display = "inline";
+            }
+            val.style.visibility = val.isvalid ? "hidden" : "visible";
+
+        }
+
+        function IsControlValid(controlId, validationGroup) {
+            var validatorCount = 0;
+            var validCount = 0;
+            if (controlId != null && typeof (controlId) == "string") {
+                var control = document.getElementById(controlId);
+                validatorCount = control.Validators.length;
+                if (validatorCount > 0) {
+                    var i = validatorCount;
+                    while (i--) {
+                        if (validationGroup == null || IsValidationGroupMatch(control.Validators[i], validationGroup)) {
+                            if (control.Validators[i].isvalid) {
+                                validCount++
+                                if (validCount >= validatorCount)
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            return  validCount >= validatorCount;
+        }
+
+      
+    </script>
+</body>
+</html>
